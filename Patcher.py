@@ -2,6 +2,7 @@
 
 from inspect import getfullargspec, signature as sig, Parameter, ismodule
 from collections.abc import Iterable
+from dis import Bytecode
 
 class PatchingError(Exception):pass
 class InjectionError(Exception):pass
@@ -156,7 +157,9 @@ def Patch(t, name, force = False):				#t = Class to patch, name = method to patc
 						runPrefix(*other, **getArguments(selectArgs(arguments, prefix, prefkw)))
 						yields = []
 					if RunOriginal:
-						runOriginal(*other, **getArguments(selectArgs(arguments, original, kwarg)))
+						argsWithInst = arguments.copy()
+						argsWithInst[f"{argPrefix}instructions"]=Bytecode(oldOriginal)
+						runOriginal(*other, **getArguments(selectArgs(argsWithInst, original, kwarg)))
 						yields = []
 					if hasPostfix:
 						getPrivate(postfix)
@@ -316,7 +319,9 @@ def PatchIter(t, name, force = False):			#Love you, Python, making functions gen
 						if isinstance(ran, Iterable):
 							for value in ran:yield value
 					if RunOriginal:
-						ran = runOriginal(*other, **getArguments(selectArgs(arguments, original, kwarg)))
+						argsWithInst = arguments.copy()
+						argsWithInst[f"{argPrefix}instructions"]=Bytecode(oldOriginal)
+						ran = runOriginal(*other, **getArguments(selectArgs(argsWithInst, original, kwarg)))
 						if isinstance(ran, Iterable):
 							for value in ran:yield value
 						yields = []
@@ -346,4 +351,6 @@ def PatchIter(t, name, force = False):			#Love you, Python, making functions gen
 	return PatchWrapper
 
 def PatchAll():
+	global Patches
 	for p in Patches:p()		#Run every HandlePatch() method
+	Patches = []		#Clear patch methods
