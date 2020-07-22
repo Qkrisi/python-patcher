@@ -14,7 +14,7 @@ Use the `Patch` decorator on a class with the following arguments to patch a met
 | --- | --- | --- | --- |
 | t | `type` or `module` | - | The type or module that contains the target method |
 | name | `str` | - | The name of the target method |
-| force | `bool` | False | If true, the patch will try to add a `None` as object reference if the method needs it and it isn't provided. More about it later |
+| force | `bool` | False | If true, the patch will try to add a `None` as object reference if the method needs it and it isn't provided. More about it [here](https://github.com/Qkrisi/python-patcher/wiki/Safe-Patching) |
 
 The class the decorator is applied to can contain any of the following patch methods (or more of them):
 
