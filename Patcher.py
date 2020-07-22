@@ -144,10 +144,11 @@ def Patch(t, name, force = False):				#t = Class to patch, name = method to patc
 								break
 							if isinstance(value, SetVar):	#Handle SetVar
 								handleChange(getName(value.Name), value.Value, paramSet)
+					return ran
 				def runPrefix(*o, **kargs):
 					runIteration(prefix, True, *o, **kargs)
 				def runOriginal(*o, **kargs):
-					arguments[f"{argPrefix}result"]=original(*(o if getfullargspec(original).varargs!=None else []), **kargs)
+					arguments[f"{argPrefix}result"]=runIteration(original, False, *o, **kargs)
 				def runPostfix(*o, **kargs):
 					runIteration(postfix, False, *o, **kargs)
 				r = None
@@ -298,12 +299,13 @@ def PatchIter(t, name, force = False):			#Love you, Python, making functions gen
 								break
 							if isinstance(value, SetVar):
 								handleChange(getName(value.Name), value.Value, paramSet)
+					return ran
 				def runPrefix(*o, **kargs):
 					ran = runIteration(prefix, True, *o, **kargs)
 					if isinstance(ran, Iterable):
 						for value in ran:yield value
 				def runOriginal(*o, **kargs):
-					ran=original(*(o if getfullargspec(original).varargs!=None else []), **kargs)
+					ran=runIteration(original, False, *o, **kargs)
 					arguments[f"{argPrefix}result"]=ran
 					if isinstance(ran, Iterable):
 						for value in ran:yield value
