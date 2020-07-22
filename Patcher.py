@@ -124,7 +124,9 @@ def Patch(t, name, force = False):				#t = Class to patch, name = method to patc
 							handleChange(temp, value, paramSet)
 							return
 						raise NameError(f'Invalid parameter name: "{name}"')
-					if isinstance(arguments[name], RefVar):setattr(setter, arguments[name].Name, value)
+					if isinstance(arguments[name], RefVar):
+						setattr(setter, arguments[name].Name, value)
+						arguments[name]=RefVar(arguments[name].Name, value)
 					else:arguments[name]=value
 				def getPrivate(func):	#Refer fields
 					for field in getFieldNames(func, argPrefix):
@@ -279,7 +281,9 @@ def PatchIter(t, name, force = False):			#Love you, Python, making functions gen
 							handleChange(temp, value, paramSet)
 							return
 						raise NameError(f'Invalid parameter name: "{name}"')
-					if isinstance(arguments[name], RefVar):setattr(setter, arguments[name].Name, value)
+					if isinstance(arguments[name], RefVar):
+						setattr(setter, arguments[name].Name, value)
+						arguments[name]=RefVar(arguments[name].Name, value)
 					else:arguments[name]=value
 				def getPrivate(func):
 					for field in getFieldNames(func, argPrefix):
