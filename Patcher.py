@@ -1,6 +1,6 @@
 #Project inspired by Harmony: https://github.com/pardeike/Harmony
 
-from inspect import getfullargspec, signature as sig, Parameter, ismodule
+from inspect import getfullargspec, signature as sig, Parameter, ismodule, isclass
 from collections.abc import Iterable
 from dis import Bytecode
 
@@ -30,7 +30,7 @@ class Stop(OptionalYield):		#Stop iteration
 		self.State = checkType(state, bool)
 
 def Patch(t, name, force = False):				#t = Class to patch, name = method to patch
-	if type(t)!=type and not ismodule(t):raise PatchingError(f"Patch type should either be a type or a module. Current type: {type(t)}")
+	if not isclass(t) and not ismodule(t):raise PatchingError(f"Patch type should either be a type or a module. Current type: {type(t)}")
 	def PatchWrapper(cl):		#cl = Patching class
 		if type(cl)!=type:raise PatchingError("Patch decorator should be applied to classes only!")
 		if type(force)!=bool:raise TypeError('"force" should be a boolean')
@@ -64,14 +64,14 @@ def Patch(t, name, force = False):				#t = Class to patch, name = method to patc
 			def PatchedMethod(*args, **kwargs):
 				global original
 				global RunOriginal
-				arginfo = getfullargspec(original)
+				arginfo = getfullargspec(oldOriginal)
 				params = arginfo.args
 				kwarg = arginfo.varkw != None
 				infarg = arginfo.varargs != None
 				pos = -1
 				argPrefix = f"_{cl.__name__}__"
 				arguments = {f"{argPrefix}result":None, f"{argPrefix}state":None}
-				defaults = getDefaultArgs(original)
+				defaults = getDefaultArgs(oldOriginal)
 				r = None
 				for parameter in params:
 					pos+=1
@@ -188,7 +188,7 @@ def Patch(t, name, force = False):				#t = Class to patch, name = method to patc
 
 
 def PatchIter(t, name, force = False):			#Love you, Python, making functions generators if there's a yield keyword in it, no matter if it's used or not
-	if type(t)!=type and not ismodule(t):raise PatchingError(f"Patch type should either be a type or a module. Current type: {type(t)}")
+	if not isclass(t) and not ismodule(t):raise PatchingError(f"Patch type should either be a type or a module. Current type: {type(t)}")
 	def PatchWrapper(cl):
 		if type(cl)!=type:raise PatchingError("Patch decorator should be applied to classes only!")
 		if type(force)!=bool:raise TypeError('"force" should be a boolean')
@@ -222,13 +222,13 @@ def PatchIter(t, name, force = False):			#Love you, Python, making functions gen
 			def PatchedMethod(*args, **kwargs):
 				global original
 				global RunOriginal
-				arginfo = getfullargspec(original)
+				arginfo = getfullargspec(oldOriginal)
 				params = arginfo.args
 				kwarg = arginfo.varkw != None
 				pos = -1
 				argPrefix = f"_{cl.__name__}__"
 				arguments = {f"{argPrefix}result":None, f"{argPrefix}state":None}
-				defaults = getDefaultArgs(original)
+				defaults = getDefaultArgs(oldOriginal)
 				r = None
 				for parameter in params:
 					pos+=1
