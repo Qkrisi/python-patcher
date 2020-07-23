@@ -6,6 +6,10 @@ With this module, you can alter live methods or functions of classes and modules
 
 -[Forbiddenfruit](https://pypi.org/project/forbiddenfruit/) (Only needed if you patch methods of built-in *classes* (like str, int, etc.))
 
+## Injection
+
+To inject the patches into a builded program, use the [pyrasite](pip install pyrasite) library
+
 ## Usage
 
 Use the `Patch` decorator on a class with the following arguments to patch a method:
