@@ -32,7 +32,7 @@ class Stop(OptionalYield):		#Stop iteration
 def Patch(t, name, force = False):				#t = Class to patch, name = method to patch
 	if not isclass(t) and not ismodule(t):raise PatchingError(f"Patch type should either be a type or a module. Current type: {type(t)}")
 	def PatchWrapper(cl):		#cl = Patching class
-		if type(cl)!=type:raise PatchingError("Patch decorator should be applied to classes only!")
+		if not isclass(cl):raise PatchingError("Patch decorator should be applied to classes only!")
 		if type(force)!=bool:raise TypeError('"force" should be a boolean')
 		def HandlePatch():
 			if not hasattr(t, name):raise PatchingError(f'Method with name "{name}" does not exist in class "{t.__name__}"')
@@ -190,7 +190,7 @@ def Patch(t, name, force = False):				#t = Class to patch, name = method to patc
 def PatchIter(t, name, force = False):			#Love you, Python, making functions generators if there's a yield keyword in it, no matter if it's used or not
 	if not isclass(t) and not ismodule(t):raise PatchingError(f"Patch type should either be a type or a module. Current type: {type(t)}")
 	def PatchWrapper(cl):
-		if type(cl)!=type:raise PatchingError("Patch decorator should be applied to classes only!")
+		if not isclass(cl):raise PatchingError("Patch decorator should be applied to classes only!")
 		if type(force)!=bool:raise TypeError('"force" should be a boolean')
 		def HandlePatch():
 			if not hasattr(t, name):raise PatchingError(f'Method with name "{name}" does not exist in class "{t.__name__}"')
