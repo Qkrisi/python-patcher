@@ -8,7 +8,11 @@ With this module, you can alter live methods or functions of classes and modules
 
 ## Injection
 
-To inject the patches into a builded program, use [pyrasite](https://pypi.org/project/pyrasite/)
+To inject the patches into a builded program, use
+
+-[pyrasite](https://pypi.org/project/pyrasite/) for an already running process
+
+-the python, or compiled python files (`py`, `pyc`, `pyd`, `pyo`) to refer the modules and start the program after patch
 
 ## Usage
 
